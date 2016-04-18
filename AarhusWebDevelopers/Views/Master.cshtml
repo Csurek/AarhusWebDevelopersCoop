@@ -1,0 +1,58 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = null;
+}
+<html>
+<head>
+	
+    <script src="~/Scripts/jquery-2.2.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="~/Content/custom-style.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	</head>
+<body>
+	<nav class="navbar-inverse navbar-default">
+	@{ var root = CurrentPage.AncestorOrSelf(1); }
+<a class="navbar-brand" href="#">AarhusWebDevCoop</a>
+		<div class="navcont">
+		<ul class="nav navbar-nav">
+		<li class="@(CurrentPage.Name == root.Name ? "active" : null)">
+		<a href="/">@root.Name</a>
+		</li>
+		@foreach (var menuItem in root.Children.Where("Visible")) {
+			<li class="@(menuItem.IsAncestorOrSelf(CurrentPage) ? "active" : null)">
+			<a href="@menuItem.Url">@menuItem.Name</a>
+			</li>
+		}
+
+		<li class="dropdown">
+		   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects<span class="caret"></span></a>
+				  <ul class="dropdown-menu">
+				@{
+					  IQueryable projectsDropdown =
+						Model.Content.AncestorOrSelf(1)
+						.Children
+						.Where(x => x.DocumentTypeAlias == "projectsMain")
+						.First()
+						.Children
+						.Where("Visible")
+						.OrderBy("Name");
+
+					}
+					@foreach(IPublishedContent project in projectsDropdown){
+		<li><a href="@project.Url">@project.Name</a></li>                  
+		  }
+</div>  
+</ul> 
+</nav>
+
+	<div class="container">
+	@RenderBody()
+	</div>
+		
+	
+<footer>@Umbraco.Field("footer", recursive: true)</footer>
+</body></html>

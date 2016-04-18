@@ -1,0 +1,53 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+
+
+<div id="main-container">
+    <div id="main" class="wrapper clearfix">
+		
+
+
+		
+		@{
+		var memberService = ApplicationContext.Current.Services.MemberService;
+		var activeMembers = memberService.GetMembersByGroup("Active");
+		var prospectMembers = memberService.GetMembersByGroup("Prospect");
+		
+}
+
+	
+<h3>Active Members</h3>
+
+	@foreach (var member in activeMembers) 
+{
+	
+<p>@(member.GetValue("firstname") + " "+ member.GetValue("lastname")) </p>
+	
+<p>Address: @member.GetValue("address")<br />
+   Zip/City: @(member.GetValue("zip") + " "+ member.GetValue("city"))<br />
+   Mobile:  @member.GetValue("mobile")
+</p>
+		<img src='<umbraco:Item field="Photo" runat="server" Xslt="umbraco.library:GetMedia({0},false())/umbracoFile"></umbraco:Item>' alt=''/>
+	  
+	   
+	<hr>
+}
+
+
+	
+<h3>Prospect Members</h3>
+
+	@foreach (var member in prospectMembers) 
+{
+	
+<p>@(member.GetValue("firstname") + " "+ member.GetValue("lastname"))</p>
+
+<p>Mobile: @member.GetValue("mobile")</p>
+	<br />	
+}
+
+    </div> <!-- #main -->
+</div> <!-- #main-container -->
